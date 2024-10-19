@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Board Game</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="goBoard" width="500" height="500"></canvas>
+    <script>
+        const canvas = document.getElementById('goBoard');
+        const ctx = canvas.getContext('2d');
+        const boardSize = 19; // Standard Go board size
+        const cellSize = canvas.width / (boardSize + 1);
+
+        let currentPlayer = 'black';
+        let board = Array(boardSize).fill().map(() => Array(boardSize).fill(null));
+
+        function drawBoard() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw grid lines
+            for (let i = 0; i <= boardSize; i++) {
+                ctx.beginPath();
+                ctx.moveTo(cellSize, cellSize * (i + 1));
+                ctx.lineTo(cellSize * boardSize, cellSize * (i + 1));
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(cellSize * (i + 1), cellSize);
+                ctx.lineTo(cellSize * (i + 1), cellSize * boardSize);
+                ctx.stroke();
+            }
+
+            // Draw stones
+            for (let i = 0; i < boardSize; i++) {
+                for (let j = 0; j < boardSize; j++) {
+                    if (board[i][j]) {
+                        ctx.fillStyle = board[i][j];
+                        ctx.beginPath();
+                        ctx.arc((j + 1) * cellSize, (i + 1) * cellSize, cellSize / 2 - 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+            }
+        }
+
+        function placeStone(x, y) {
+            const i = Math.round(y / cellSize) - 1;
+            const j = Math.round(x / cellSize) - 1;
+
+            if (i >= 0 && i < boardSize && j >= 0 && j < boardSize && !board[i][j]) {
+                board[i][j] = currentPlayer;
+                currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+                drawBoard();
+            }
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            placeStone(x, y);
+        });
+
+        drawBoard();
+    </script>
+</body>
+</html>
