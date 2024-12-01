@@ -1,1 +1,1 @@
-In the GO board game, each player buys a tile in the SOL unit to make a move. The winning player will receive 75 percent of the money invested and the losing player will receive 33.3 percent of the money invested.
+
